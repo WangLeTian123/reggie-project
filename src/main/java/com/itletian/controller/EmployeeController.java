@@ -66,7 +66,7 @@ public class EmployeeController {
      * 新增员工功能
      */
     @PostMapping
-    public R<String> save(@RequestBody Employee employee, HttpServletRequest request) {
+    public R<String> saveEmployee(@RequestBody Employee employee, HttpServletRequest request) {
         // 默认初始密码是123456 需要md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         // 设置当前时间
@@ -105,7 +105,7 @@ public class EmployeeController {
      * 根据id修改员工信息
      */
     @PutMapping
-    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<String> modifyEmployee(HttpServletRequest request, @RequestBody Employee employee) {
         // 获取当前员工id
         Long empId = (Long) request.getSession().getAttribute("employee");
         // 设置员工信息
@@ -124,7 +124,7 @@ public class EmployeeController {
         if(employee != null){
             return R.success(employee);
         }
-        return R.error("没有查询到对应员工信息");
+            return R.error("没有查询到对应员工信息");
 
     }
 
