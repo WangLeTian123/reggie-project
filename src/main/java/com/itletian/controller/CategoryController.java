@@ -52,7 +52,7 @@ public class CategoryController {
      */
     @DeleteMapping
     public R<String> removeCategoryById(Long id) {
-        categoryService.removeById(id);
+        categoryService.removeCategoryServiceById(id);
         return R.success("删除成功");
     }
 
