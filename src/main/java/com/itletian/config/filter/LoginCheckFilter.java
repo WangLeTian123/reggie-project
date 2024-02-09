@@ -1,6 +1,7 @@
 package com.itletian.config.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.itletian.config.mybaitPlus.BaseContext;
 import com.itletian.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -49,6 +50,10 @@ public class LoginCheckFilter implements Filter {
 
         // 4、判断登陆状态，如果已经登陆，则直接放行
         if (request.getSession().getAttribute("employee") != null) {
+
+            Long empId = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
+
             filterChain.doFilter(request, response);
             return;
         }
