@@ -1,7 +1,15 @@
 package com.itletian.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itletian.dto.DishDto;
 import com.itletian.entity.Dish;
 
 public interface DishService extends IService<Dish> {
+
+    void saveDish(DishDto dishDto);
+
+    DishDto getDishById(Long id);
+
+    void updateDish(DishDto dishDto);
+
 }
