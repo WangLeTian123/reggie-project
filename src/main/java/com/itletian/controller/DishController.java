@@ -105,5 +105,13 @@ public class DishController {
         return R.success("修改成功");
     }
 
+    /**
+     * 根据条件查询对应的菜品数据
+     */
+    @GetMapping("/list")
+    public R<List<DishDto>> list(Dish dish) {
+        List<DishDto> dishDtoList = dishService.getList(dish);
+        return R.success(dishDtoList);
+    }
 
 }

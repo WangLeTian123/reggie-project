@@ -92,5 +92,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     }
 
+    @Override
+    public List<DishDto> getList(Dish dish) {
+        return null;
+    }
+
 
 }

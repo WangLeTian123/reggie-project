@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.itletian.dto.DishDto;
 import com.itletian.entity.Dish;
 
+import java.util.List;
+
 public interface DishService extends IService<Dish> {
 
     void saveDish(DishDto dishDto);
@@ -15,4 +17,6 @@ public interface DishService extends IService<Dish> {
     void removeDish(String ids);
 
     void updateDishStatus(int status, String ids);
+
+    List<DishDto> getList(Dish dish);
 }
