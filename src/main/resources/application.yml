@@ -18,3 +18,6 @@ mybatis-plus:
   #xml文件的位置(resources下的mapper文件夹)
   mapper-locations: classpath:mapper/*.xml
 
+reggie:
+  path: D:\idea\reggie-project\src\main\resources\front\dish-images\
+
