@@ -68,5 +68,29 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(dishDto.getFlavors());
     }
 
+    @Override
+    public void removeDish(String ids) {
+        String[] list = ids.split(",");
+        for (String id : list) {
+            // 删除菜品
+            this.removeById(Long.parseLong(id));
+            // 删除菜品对应口味信息
+            LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(DishFlavor::getDishId, id);
+            dishFlavorService.remove(queryWrapper);
+        }
+    }
+
+    @Override
+    public void updateDishStatus(int status, String ids) {
+        String[] list = ids.split(",");
+        for (String id : list) {
+            Dish dish = this.getById(Long.parseLong(id));
+            dish.setStatus(status);
+            this.updateById(dish);
+        }
+
+    }
+
 
 }

@@ -12,4 +12,7 @@ public interface DishService extends IService<Dish> {
 
     void updateDish(DishDto dishDto);
 
+    void removeDish(String ids);
+
+    void updateDishStatus(int status, String ids);
 }

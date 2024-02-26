@@ -86,4 +86,24 @@ public class DishController {
         return R.success("修改菜品成功");
     }
 
+    /**
+     * 删除菜品(单删除/批量删除)
+     */
+    @DeleteMapping
+    public R<String> removeDish(String ids) {
+        log.info(ids);
+        dishService.removeDish(ids);
+        return R.success("删除菜品成功");
+    }
+
+    /**
+     * 修改菜品状态(停售/启售)
+     */
+    @PostMapping("/status/{status}")
+    public R<String> modifyDishStatus(@PathVariable int status, String ids) {
+        dishService.updateDishStatus(status, ids);
+        return R.success("修改成功");
+    }
+
+
 }
