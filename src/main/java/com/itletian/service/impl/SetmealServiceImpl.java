@@ -10,6 +10,7 @@ import com.itletian.mapper.SetmealMapper;
 import com.itletian.service.CategoryService;
 import com.itletian.service.SetmealDishService;
 import com.itletian.service.SetmealService;
+import com.itletian.util.CustomException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,10 +92,16 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     public void removeSetmeal(String ids) {
         String[] list = ids.split(",");
         for (String id : list) {
-            this.removeById(Long.parseLong(id));
-            LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SetmealDish::getSetmealId, id);
-            setmealDishService.remove(queryWrapper);
+            Setmeal setmeal = this.getById(Long.parseLong(id));
+            if (setmeal.getStatus() == 1) {
+                throw new CustomException("套餐正在售卖中，不能删除!");
+            } else {
+                this.removeById(Long.parseLong(id));
+                LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(SetmealDish::getSetmealId, id);
+                setmealDishService.remove(queryWrapper);
+            }
+
         }
     }
 }

@@ -10,6 +10,7 @@ import com.itletian.mapper.DishMapper;
 import com.itletian.service.CategoryService;
 import com.itletian.service.DishFlavorService;
 import com.itletian.service.DishService;
+import com.itletian.util.CustomException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +79,18 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     public void removeDish(String ids) {
         String[] list = ids.split(",");
         for (String id : list) {
-            // 删除菜品
-            this.removeById(Long.parseLong(id));
-            // 删除菜品对应口味信息
-            LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(DishFlavor::getDishId, id);
-            dishFlavorService.remove(queryWrapper);
+            Dish dish = this.getById(Long.parseLong(id));
+            if (dish.getStatus() == 1) {
+                throw new CustomException("菜品正在售卖，不能删除！");
+            } else {
+                // 删除菜品
+                this.removeById(Long.parseLong(id));
+                // 删除菜品对应口味信息
+                LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(DishFlavor::getDishId, id);
+                dishFlavorService.remove(queryWrapper);
+            }
+
         }
     }
 
