@@ -81,5 +81,21 @@ public class SetmealController {
         return R.success("套餐修改成功");
     }
 
+    /**
+     * 修改套餐售卖状态（单修改/批量修改）
+     */
+    @PostMapping("/status/{status}")
+    public R<String> modifySetmealStatus(@PathVariable Integer status, String ids) {
+        setmealService.updateSetmealStatus(status, ids);
+        return R.success("修改售卖状态成功");
+    }
 
+    /**
+     * 删除套餐（单删除/批量删除）
+     */
+    @DeleteMapping
+    public R<String> removeSetmeal(String ids) {
+        setmealService.removeSetmeal(ids);
+        return R.success("套餐删除成功");
+    }
 }

@@ -73,4 +73,28 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         }
         setmealDishService.saveBatch(setmealDto.getSetmealDishes());
     }
+
+    @Override
+    public void updateSetmealStatus(Integer status, String ids) {
+        String[] list = ids.split(",");
+        for (String id : list) {
+            // 根据id查询对应套餐
+            Setmeal setmeal = this.getById(Long.parseLong(id));
+            // 修改套餐状态并更新
+            setmeal.setStatus(status);
+            this.updateById(setmeal);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeSetmeal(String ids) {
+        String[] list = ids.split(",");
+        for (String id : list) {
+            this.removeById(Long.parseLong(id));
+            LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SetmealDish::getSetmealId, id);
+            setmealDishService.remove(queryWrapper);
+        }
+    }
 }
