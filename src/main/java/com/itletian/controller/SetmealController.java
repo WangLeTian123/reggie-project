@@ -12,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -55,4 +53,33 @@ public class SetmealController {
         setmealDtoPage.setRecords(list);
         return R.success(setmealDtoPage);
     }
+
+    /**
+     * 新增套餐
+     */
+    @PostMapping
+    public R<String> addSetmeal(@RequestBody SetmealDto setmealDto) {
+        setmealService.saveSetmeal(setmealDto);
+        return R.success("套餐添加成功");
+    }
+
+    /**
+     * 根据套餐id查询套餐
+     */
+    @GetMapping("/{id}")
+    public R<SetmealDto> querySetmealById(@PathVariable Long id) {
+        SetmealDto setmealDto = setmealService.getSetmealById(id);
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 修改套餐
+     */
+    @PutMapping
+    public R<String> modifySetmeal(@RequestBody SetmealDto setmealDto) {
+        setmealService.updateSetmeal(setmealDto);
+        return R.success("套餐修改成功");
+    }
+
+
 }

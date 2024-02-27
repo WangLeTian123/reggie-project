@@ -11,14 +11,17 @@ import com.itletian.service.DishService;
 import com.itletian.service.SetmealService;
 import com.itletian.util.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
     // 菜品
+    @Lazy
     @Autowired
     private DishService dishService;
     // 套餐
+    @Lazy
     @Autowired
     private SetmealService setmealService;
     /**

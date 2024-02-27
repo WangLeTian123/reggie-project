@@ -3,22 +3,28 @@ package com.itletian.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itletian.dto.DishDto;
+import com.itletian.entity.Category;
 import com.itletian.entity.Dish;
 import com.itletian.entity.DishFlavor;
 import com.itletian.mapper.DishMapper;
+import com.itletian.service.CategoryService;
 import com.itletian.service.DishFlavorService;
 import com.itletian.service.DishService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements DishService {
     @Autowired
     private DishFlavorService dishFlavorService;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     @Transactional
@@ -94,7 +100,28 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     public List<DishDto> getList(Dish dish) {
-        return null;
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
+        queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        queryWrapper.eq(Dish::getStatus, 1);
+        queryWrapper.orderByDesc(Dish::getUpdateTime);
+        List<Dish> dishList = this.list(queryWrapper);
+
+        List<DishDto> list = new ArrayList<>();
+        for (Dish d : dishList) {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(d, dishDto);
+            Category category = categoryService.getById(d.getCategoryId());
+            if (category != null) {
+                dishDto.setCategoryName(category.getName());
+            }
+            LambdaQueryWrapper<DishFlavor> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(DishFlavor::getDishId, d.getId());
+            List<DishFlavor> flavors = dishFlavorService.list(wrapper);
+            dishDto.setFlavors(flavors);
+            list.add(dishDto);
+        }
+        return list;
     }
 
 
