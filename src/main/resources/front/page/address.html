@@ -116,8 +116,11 @@
                         history.go(-1)
                     },
                     toAddressEditPage(item){
-                        window.requestAnimationFrame(()=>{
+                        /*window.requestAnimationFrame(()=>{
                             window.location.href= `address-edit.html`
+                        })*/
+                        window.requestAnimationFrame(()=>{
+                            window.location.href= `address-edit.html?id=${item.id}`
                         })
                     },
                     toAddressCreatePage(){
