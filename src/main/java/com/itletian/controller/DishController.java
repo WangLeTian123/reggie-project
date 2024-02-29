@@ -15,10 +15,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @Slf4j
@@ -29,6 +31,9 @@ public class DishController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 分页查询菜品
@@ -66,6 +71,9 @@ public class DishController {
     public R<String> saveDish(@RequestBody DishDto dishDto) {
         log.info(dishDto.toString());
         dishService.saveDish(dishDto);
+        // 清理所有菜品的缓存数据(清理所有以“dish”开头的key)
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return R.success("新增菜品成功");
     }
 
@@ -84,6 +92,10 @@ public class DishController {
     @PutMapping
     public R<String> modifyDish(@RequestBody DishDto dishDto) {
         dishService.updateDish(dishDto);
+
+        // 清理所有菜品的缓存数据(清理所有以“dish”开头的key)
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return R.success("修改菜品成功");
     }
 
@@ -94,6 +106,10 @@ public class DishController {
     public R<String> removeDish(String ids) {
         log.info(ids);
         dishService.removeDish(ids);
+
+        // 清理所有菜品的缓存数据(清理所有以“dish”开头的key)
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return R.success("删除菜品成功");
     }
 

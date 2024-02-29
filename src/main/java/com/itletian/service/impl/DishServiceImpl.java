@@ -14,11 +14,13 @@ import com.itletian.util.CustomException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements DishService {
@@ -26,6 +28,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     private DishFlavorService dishFlavorService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     @Transactional
@@ -73,6 +77,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             dishFlavor.setDishId(dishDto.getId());
         }
         dishFlavorService.saveBatch(dishDto.getFlavors());
+
     }
 
     @Override
@@ -107,6 +112,21 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     public List<DishDto> getList(Dish dish) {
+        /**
+         * redis缓存菜品
+         */
+        List<DishDto> list = null;
+
+        // 动态构造key  dish_1397844391040167938_1
+        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        //先从redis中获取缓存数据
+        list = (List<DishDto>) redisTemplate.opsForValue().get(key);
+        // 如果redis中有这些数据则直接返回
+        if (list != null) {
+            return list;
+        }
+
+        // 如果redis中没有这些数据则需查询数据库，查完后将数据再缓存到redis中
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
@@ -114,7 +134,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         queryWrapper.orderByDesc(Dish::getUpdateTime);
         List<Dish> dishList = this.list(queryWrapper);
 
-        List<DishDto> list = new ArrayList<>();
+        list = new ArrayList<>();
         for (Dish d : dishList) {
             DishDto dishDto = new DishDto();
             BeanUtils.copyProperties(d, dishDto);
@@ -128,6 +148,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             dishDto.setFlavors(flavors);
             list.add(dishDto);
         }
+
+        redisTemplate.opsForValue().set(key, list, 60, TimeUnit.MINUTES);
         return list;
     }
 
