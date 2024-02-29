@@ -2,6 +2,10 @@ server:
   port: 8080
 
 spring:
+  redis:
+    port: 6379
+    host: 192.168.226.3
+    password: 123456
   application:
     name: reggie_take_out
   datasource:

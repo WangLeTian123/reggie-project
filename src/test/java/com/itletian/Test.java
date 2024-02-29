@@ -5,6 +5,7 @@ import com.itletian.entity.Employee;
 import com.itletian.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -12,14 +13,14 @@ import java.util.Date;
 @SpringBootTest
 public class Test {
     @Autowired
-    private EmployeeService employeeService;
+    private RedisTemplate redisTemplate;
 
+    /**
+     * 操作String类型数据
+     */
     @org.junit.jupiter.api.Test
     public void Test01() {
-        System.out.println(employeeService.getById(1L).getUpdateTime());
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        LocalDateTime time = employeeService.getById(1L).getUpdateTime();
-        DateUtil.format(time, pattern);
-        System.out.println(time);
+        redisTemplate.opsForValue().set("address", "kaifeng");
+
     }
 }
