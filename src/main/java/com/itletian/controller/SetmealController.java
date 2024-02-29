@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itletian.dto.SetmealDto;
 import com.itletian.entity.Category;
 import com.itletian.entity.Setmeal;
+import com.itletian.entity.SetmealDish;
 import com.itletian.service.CategoryService;
+import com.itletian.service.SetmealDishService;
 import com.itletian.service.SetmealService;
 import com.itletian.util.R;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -25,6 +28,9 @@ public class SetmealController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SetmealDishService setmealDishService;
 
     /**
      * 分页查询套餐
@@ -98,4 +104,30 @@ public class SetmealController {
         setmealService.removeSetmeal(ids);
         return R.success("套餐删除成功");
     }
+
+    /**
+     * 根据条件查询套餐数据
+     */
+    @GetMapping("/list")
+    public R<List<Setmeal>> querySetmealList(Setmeal setmeal) {
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
+        queryWrapper.eq(setmeal.getStatus() != null, Setmeal::getStatus, setmeal.getStatus());
+        queryWrapper.orderByDesc(Setmeal::getUpdateTime);
+        List<Setmeal> setmealList = setmealService.list(queryWrapper);
+        return R.success(setmealList);
+    }
+
+    /**
+     * 根据套餐id查看该套餐对应的菜品
+     */
+    @GetMapping("/dish/{id}")
+    public R<List<SetmealDish>> querySetmealDishListById(@PathVariable Long id) {
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, id);
+        queryWrapper.orderByDesc(SetmealDish::getUpdateTime);
+        List<SetmealDish> setmealDishList = setmealDishService.list(queryWrapper);
+        return R.success(setmealDishList);
+    }
+
 }

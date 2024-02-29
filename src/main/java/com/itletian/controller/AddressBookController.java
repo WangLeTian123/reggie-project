@@ -62,6 +62,18 @@ public class AddressBookController {
     }
 
     /**
+     * 获取当前用户的默认地址
+     */
+    @GetMapping("/default")
+    public R<AddressBook> queryDefaultAddressBook() {
+        LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AddressBook::getUserId, BaseContext.getCurrentId());
+        queryWrapper.eq(AddressBook::getIsDefault, 1);
+        AddressBook addressBook = addressBookService.getOne(queryWrapper);
+        return R.success(addressBook);
+    }
+
+    /**
      * 根据id查询对应地址信息
      */
     @GetMapping("/{id}")

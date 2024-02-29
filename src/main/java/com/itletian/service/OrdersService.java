@@ -9,4 +9,6 @@ import java.time.LocalDateTime;
 
 public interface OrdersService extends IService<Orders> {
     Page<OrdersDto> getPage(Integer page, Integer pageSize, String number, String beginTime, String endTime);
+
+    void submit(Orders orders);
 }

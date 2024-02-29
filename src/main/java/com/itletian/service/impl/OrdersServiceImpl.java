@@ -78,4 +78,9 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         ordersDtoPage.setRecords(ordersDtoList);
         return ordersDtoPage;
     }
+
+    @Override
+    public void submit(Orders orders) {
+
+    }
 }
