@@ -11,4 +11,6 @@ public interface OrdersService extends IService<Orders> {
     Page<OrdersDto> getPage(Integer page, Integer pageSize, String number, String beginTime, String endTime);
 
     void submit(Orders orders);
+
+    Page<OrdersDto> getUserOrderPage(Integer page, Integer pageSize);
 }
