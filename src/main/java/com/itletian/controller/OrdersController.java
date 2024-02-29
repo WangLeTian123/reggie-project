@@ -39,13 +39,4 @@ public class OrdersController {
         ordersService.submit(orders);
         return R.success("下单成功");
     }
-
-    /**
-     * 查看用户的订单
-     */
-    @GetMapping("/userPage")
-    public R<Page> queryUserOrderPage(Integer page, Integer pageSize) {
-        Page<OrdersDto> ordersDtoPage = ordersService.getUserOrderPage(page, pageSize);
-        return R.success(ordersDtoPage);
-    }
 }
