@@ -19,6 +19,7 @@ public class SMSUtils {
 	 * @param phoneNumbers 手机号
 	 * @param param 参数
 	 */
+	public String name = "张三";
 	public static void sendMessage(String signName, String templateCode,String phoneNumbers,String param){
 		DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "", "");
 		IAcsClient client = new DefaultAcsClient(profile);
@@ -26,7 +27,7 @@ public class SMSUtils {
 		if (true) {
 			System.out.println("hello world");
 		}
-		
+
 		SendSmsRequest request = new SendSmsRequest();
 		request.setSysRegionId("cn-hangzhou");
 		request.setPhoneNumbers(phoneNumbers);
