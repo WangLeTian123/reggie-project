@@ -23,6 +23,10 @@ public class SMSUtils {
 		DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "", "");
 		IAcsClient client = new DefaultAcsClient(profile);
 
+		if (true) {
+			System.out.println("hello world");
+		}
+
 		SendSmsRequest request = new SendSmsRequest();
 		request.setSysRegionId("cn-hangzhou");
 		request.setPhoneNumbers(phoneNumbers);
