@@ -19,7 +19,6 @@ public class SMSUtils {
 	 * @param phoneNumbers 手机号
 	 * @param param 参数
 	 */
-	public String name = "张三";
 	public static void sendMessage(String signName, String templateCode,String phoneNumbers,String param){
 		DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "", "");
 		IAcsClient client = new DefaultAcsClient(profile);
