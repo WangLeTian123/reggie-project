@@ -43,7 +43,7 @@ public class UserController {
             log.info("code={}", code);
 
             // 调用阿里云提供的短信服务API完成短信发送
-//            SMSUtils.sendMessage("", "", phone, code);
+            SMSUtils.sendMessage("letian123", "SMS_465385761", phone, code);
 
             //将生成的验证码保存到session中，方便之后登录中验证码的判断
 //            session.setAttribute(phone, code);
