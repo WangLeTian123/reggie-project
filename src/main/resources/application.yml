@@ -6,6 +6,9 @@ spring:
     port: 6379
     host: 192.168.226.3
     password: 123456
+  cache:
+    redis:
+      time-to-live: 1800000 # 设置缓存数据的过期时间
   application:
     name: reggie_take_out
   datasource:
